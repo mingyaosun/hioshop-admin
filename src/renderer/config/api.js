@@ -10,9 +10,7 @@ const api = {
     //     request_url: 'http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx'
     // },
 	// 4.19更新，物流查询不需要以上配置，只需要在server的config配置阿里云物流接口就可以
-    qiniu: 'http://up.qiniu.com',
-    // 请根据自己创建的七牛的区域进行设置：
-    // https://developer.qiniu.com/kodo/manual/1671/region-endpoint
+    qiniu: 'http://www.sunmingyao.com:8099',//改成自己图片服务器站点地址
 };
 
 

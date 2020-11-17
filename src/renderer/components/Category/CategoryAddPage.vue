@@ -185,7 +185,21 @@
                             }
                         })
                     } else {
-                        return false;
+                        //return false;
+                        this.axios.post('category/store', this.infoForm).then((response) => {
+                            if (response.data.errno === 0) {
+                                this.$message({
+                                    type: 'success',
+                                    message: '保存成功'
+                                });
+                                this.$router.go(-1)
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '保存失败'
+                                })
+                            }
+                        })
                     }
                 });
             },
