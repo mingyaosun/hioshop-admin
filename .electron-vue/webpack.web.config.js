@@ -12,6 +12,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
+  //debugger模式
+  // devtool: '#eval-source-map',
   entry: {
     web: path.join(__dirname, '../src/renderer/main.js')
   },
