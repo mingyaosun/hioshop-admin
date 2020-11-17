@@ -108,6 +108,7 @@
                                 >
                         </el-upload>
                     </el-form-item>
+
                     <el-form-item label="型号和价格">
                         <div>
                             <el-select class="el-select-class" v-model="specValue"
@@ -157,6 +158,11 @@
                                         <el-input size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
                                     </template>
                                 </el-table-column>
+                                <el-table-column prop="goods_yl" label="图片" width="100">
+                                    <template scope="scope">
+                                        <el-input size="mini" v-model="scope.row.goods_yl" placeholder="1"></el-input>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column label="操作" width="70">
                                     <template scope="scope">
                                         <el-button
@@ -169,6 +175,60 @@
                                 </el-table-column>
                             </el-table>
                             <el-button class="marginTop20" type="primary" @click="addSpecData">新增型号</el-button>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="商品评论">
+                        <div class="spec-wrap">
+                            <el-table :data="commentData" stripe style="width: 100%">
+                                <el-table-column prop="goods_aka" label="评论内容" width="300">
+                                    <template scope="scope">
+                                        <el-input  v-model="scope.row.body" placeholder=""></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="value" label="时间" width="250">
+                                    <template scope="scope">
+                                        <el-date-picker v-model="scope.row.time" type="datetime" placeholder="选择日期时间" default-time="23:59:59">
+                                        </el-date-picker>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="cost" label="评论者昵称" width="200">
+                                    <template scope="scope">
+                                        <el-input size="mini" v-model="scope.row.niname" placeholder=""></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="cost2" label="图片" width="200">
+                                    <template scope="scope">
+                                      <el-upload
+                                        name="file"
+                                        :action="qiniuZone"
+                                        list-type="picture-card"
+                                        :on-preview="function (file) { return galleryPreview1(file, scope.row.id)}"
+                                        :on-success="function (res, file) { return handleUploadGallerySuccess1(res, file, scope.row.id)}"
+                                        :on-remove="function (file,fileList) { return galleryRemove1(file,fileList, scope.row.id)}"
+                                        :file-list="scope.row.list"
+                                        :data="picData"
+                                        :before-upload="galleryBefore1"
+                                        :on-error="hasErrorAct"
+                                      >
+                                      <i class="el-icon-plus"></i>
+                                      </el-upload>
+                                      <el-dialog v-model="dialogVisible1[scope.row.id]" size="tiny" width="30">
+                                      <img width="30" :src="dialogImageUrl1[scope.row.id]" alt="">
+                                      </el-dialog>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="70">
+                                    <template scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                type="danger"
+                                                icon="el-icon-delete" circle
+                                                @click="commentDelete(scope.$index, scope.row)">
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-button class="marginTop20" type="primary" @click="addcommentData">新增评论</el-button>
                         </div>
                     </el-form-item>
                     <el-form-item label="属性设置" class="checkbox-wrap">
@@ -245,7 +305,9 @@
                 cateId:'',
                 detail_list: [],
                 dialogImageUrl: '',
+                dialogImageUrl1: [],
                 dialogVisible: false,
+                dialogVisible1: [],
                 options: [],
                 cateOptions: [],
                 uploaderHeader: {
@@ -302,16 +364,29 @@
                     cost:'',
                     retail_price:'',
                     goods_weight:'',
-                    goods_number:''
+                    goods_number:'',
+                    goods_yl:'1'
+                }],
+                commentData: [{
+                    body:'',
+                    time:'',
+                    niname:'',
+                    id:'',
+                    list:[]
                 }],
                 specOptionsList: [],
                 specValue:1,
                 selectedSpec: '规格',
                 is_has_spec: false,
+                is_has_comment: false,
                 gallery: {
                     goods_id: 0,
                 },
+                comimg: {
+                    goods_id: 0,
+                },
                 gallery_list: [],
+                comimg_list: [],
                 visible: false,
                 hasPost: 0,
             }
@@ -352,12 +427,29 @@
                         let info = response.data.data;
                         this.specData = info.specData;
                         this.specValue = info.specValue;
-                        console.log(this.specValue)
-                        console.log(this.specValue)
-                        console.log(this.specValue)
-                        console.log(this.specValue)
                     }
                 })
+            },
+            getcommentData() {
+             var _this=this;
+                let id = this.infoForm.id;
+                this.axios.post('specification/getGoodscomment', {id: id}).then((response) => {
+                    if (response.data.errno === 0) {
+                        let info = response.data.data;
+                        _this.commentData = info.commentData;
+                        console.log("commentData");
+                        console.log(_this.commentData);
+                    }
+                })
+            },
+            addcommentData() {
+                let ele = {
+                    body:'',
+                    time:'',
+                    niname:'',
+                    id:''
+                }
+                this.commentData.push(ele)
             },
             addSpecData() {
                 let ele = {
@@ -366,12 +458,16 @@
                     cost:'',
                     retail_price:'',
                     goods_weight:'',
-                    goods_number:''
+                    goods_number:'',
+                    goods_yl:'1'
                 }
                 this.specData.push(ele)
             },
             specDelete(index, row) {
                 this.specData.splice(index, 1);
+            },
+            commentDelete(index, row) {
+                this.commentData.splice(index, 1);
             },
             testCallBack() {
                 console.log(this.specValue);
@@ -394,8 +490,14 @@
             specChange(value) {
                 this.specForm.id = value;
             },
+            commentChange(value) {
+                this.commentForm.id = value;
+            },
             addPrimarySpec() {
                 this.is_has_spec = true;
+            },
+            addPrimarycomment() {
+                this.is_has_comment = true;
             },
             getImgUrl() {
                 let str = this.infoForm.goods_desc;
@@ -470,6 +572,10 @@
                 this.gallery.goods_id = this.infoForm.id;
                 this.getQiniuToken();
             },
+            galleryBefore1() {
+                this.comimg.goods_id = this.infoForm.id;
+                this.getQiniuToken();
+            },
             galleryRemove(file, fileList) {
                 console.log('L>>>>>>>>.');
                 let para = {
@@ -490,18 +596,61 @@
                     }
                 });
             },
+            galleryRemove1(file, fileList,cidd) {
+                console.log(cidd);
+                let para = {
+                    id: file.id,
+                    url: file.url
+                }
+                this.axios.post('goods/deletecomimgFile', para).then((response) => {
+                    if (response.data.errno === 0) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功'
+                        });
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '删除失败'
+                        })
+                    }
+                });
+            },
             galleryPreview(file) {
                 console.log(file);
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
+            },
+            galleryPreview1(file,cid) {
+                console.log(file);
+                this.dialogImageUrl1[cid]='';
+                this.dialogImageUrl1[cid] = file.url;
+                this.dialogVisible1[cid] = true;
             },
             getGalleryList() {
                 let goodsId = this.infoForm.id;
                 this.axios.post('goods/getGalleryList', {goodsId: goodsId}
                 ).then((response) => {
                     this.gallery_list = response.data.data.galleryData;
+                    console.log(this.gallery_list);
                 })
             },
+            getGalleryList1(id2) {
+            var _this=this;
+                let goodsId = this.infoForm.id;
+                this.axios.post('goods/getcomimgList', {
+                goodsId: goodsId,
+                id:id2
+                }
+                ).then((response) => {
+                    this.comimg_list[id2]=[];
+                    this.comimg_list[id2] = response.data.data.galleryData;
+                    console.log(response.data.data.galleryData);
+                    _this.commentData.list=response.data.data.galleryData;
+                    console.log(_this.commentData);
+                })
+            },
+
             kdChange(kdValue) {
                 this.infoForm.freight_template_id = kdValue;
             },
@@ -554,6 +703,7 @@
                             });
 //                            this.is_has_spec = false;
 //                            this.specData = [];
+
                         }
                     })
                 });
@@ -578,7 +728,7 @@
                             return false;
                         }
                         for(const ele of this.specData){
-                            if(ele.cost == '' || ele.goods_sn == '' || ele.goods_weight == '' || ele.retail_price == '' || ele.value == ''){
+                            if(ele.retail_price == ''){
                                 this.$message({
                                     type: 'error',
                                     message: '型号和价格的值不能为空'
@@ -591,6 +741,7 @@
                             {
                                 info: this.infoForm,
                                 specData:this.specData,
+                                commentData:this.commentData,
                                 specValue:this.specValue,
                                 cateId:this.cateId,
                             }).then((response) => {
@@ -655,6 +806,27 @@
                     let that = this
                     this.axios.post('goods/gallery', info).then((response) => {
                         that.getGalleryList();
+                    })
+                }
+            },
+            handleUploadGallerySuccess1(res,file,cidd) {
+                console.log(res);
+                console.log("cid:")
+                console.log(cidd);
+                let url = this.url;
+                console.log(url);
+                if (res.key != '') {
+                    let urlData = url + res.key;
+                    let id = this.infoForm.id;
+                    let info = {
+                        url: urlData,
+                        goods_id: id,
+                        id: cidd
+                    }
+                    console.log(info);
+                    let that = this;
+                    this.axios.post('goods/comimg', info).then((response) => {
+                        that.getGalleryList1(cidd);
                     })
                 }
             },
@@ -788,6 +960,7 @@
             this.getAllSpecification();
             if (this.infoForm.id > 0) {
                 this.getSpecData();
+                this.getcommentData();
                 this.getGalleryList();
             }
             this.root = api.rootUrl;
