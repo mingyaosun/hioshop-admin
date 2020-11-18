@@ -1,9 +1,15 @@
 <?php
 header('Access-Control-Allow-Origin: *'); //*表示允许所有IP访问，如果怕被攻击，这里可以改成后端管理所在服务器的ip地址，即仅限该ip地址能存储图片；
-header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE'); //支持的http动作
-echo 'zheshitoken'+$_POST['token'] ;
+header('Content-Type:application/json');
+header('Access-Control-Allow-Methods:POST'); //支持的http动作
 if ($_POST['token']) {
-    if ($_POST['token'] == 'token123456') {
+    if ($_POST['token'] == 'MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT') {
+        function uuid()
+        {
+            $chars = md5(uniqid(mt_rand(), true));
+            $uuid = substr($chars, 0, 8) . '-' . substr($chars, 8, 4) . '-' . substr($chars, 12, 4) . '-' . substr($chars, 16, 4) . '-' . substr($chars, 20, 12);
+            return $uuid;
+        }
         // 允许上传的图片后缀
         $allowedExts = array("gif", "jpeg", "jpg", "png");
         $temp = explode(".", $_FILES["file"]["name"]);
@@ -29,13 +35,15 @@ if ($_POST['token']) {
                 // 判断当前目录下的 upload 目录是否存在该文件
                 // 如果没有 upload 目录，你需要创建它，upload 目录权限为 777
                 if (file_exists("upload/" . $_FILES["file"]["name"])) {
-                    echo $_FILES["file"]["name"] . " 文件已经存在。 ";
-                } else {
-                    // 如果 upload 目录不存在该文件则将文件上传到 upload 目录下
-                    move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $_FILES["file"]["name"]);
-                    // echo "文件存储在: " . "upload/" . $_FILES["file"]["name"];
-                    print_r("upload/" . $_FILES["file"]["name"]);
+                    unlink("upload/" . $_FILES["file"]["name"]);
+                    // echo $_FILES["file"]["name"] . " 文件已经存在。 ";
                 }
+                // 如果 upload 目录不存在该文件则将文件上传到 upload 目录下
+                $dir = "upload/" . uuid() . $_FILES["file"]["name"];
+                move_uploaded_file($_FILES["file"]["tmp_name"], $dir);
+                // echo "文件存储在: " . "upload/" . $_FILES["file"]["name"];
+                $data = array("key" => $dir);
+                print_r(json_encode($data));
             }
         } else {
             echo "非法的文件格式";

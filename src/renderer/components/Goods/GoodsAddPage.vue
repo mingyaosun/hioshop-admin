@@ -390,7 +390,6 @@
                 let that = this
                 this.axios.post('index/getQiniuToken').then((response) => {
                     let resInfo = response.data.data;
-                    console.log(resInfo.token);
                     that.picData.token = resInfo.token;
                     that.url = resInfo.url;
                 })
@@ -622,11 +621,11 @@
             handleUploadListSuccess(res) {
                 let url = this.url;
                 this.infoForm.list_pic_url = url + res.key;
-                this.axios.post('goods/uploadHttpsImage', {url:this.infoForm.list_pic_url}).then((response) => {
-                    let lastUrl = response.data.data;
-                    console.log(lastUrl);
-                    this.infoForm.https_pic_url = lastUrl;
-                })
+                // this.axios.post('goods/uploadHttpsImage', {url:this.infoForm.list_pic_url}).then((response) => {
+                //     let lastUrl = response.data.data;
+                //     console.log('lastUrl',lastUrl);
+                //     this.infoForm.https_pic_url = lastUrl;
+                // })
             },
             handleUploadIndexPicSuccess(res) {
                 let url = this.url;
