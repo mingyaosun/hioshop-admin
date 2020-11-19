@@ -284,6 +284,7 @@ export default {
       let pindex = tab._data.index;
       this.page = 1;
       this.activeClass = 0;
+      this.isLoading = true;
       if (pindex == 0) {
         this.getList();
         this.pIndex = 0;
@@ -299,6 +300,7 @@ export default {
       }
     },
     handlePageChange(val) {
+      this.isLoading = true;
       this.page = val;
       let nIndex = this.pIndex;
       if (nIndex == 0) {
@@ -424,6 +426,7 @@ export default {
       })
     },
     sortOrder(num) {
+      this.isLoading = true;
       this.num = num;
       this.pIndex = 4;
       this.activeClass = num;
@@ -437,6 +440,7 @@ export default {
         this.tableData = response.data.data.data;
         this.page = response.data.data.currentPage;
         this.total = response.data.data.count;
+        this.isLoading = false
       })
     },
     changeStatus($event, para) {

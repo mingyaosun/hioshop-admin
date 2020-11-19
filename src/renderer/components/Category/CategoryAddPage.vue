@@ -143,23 +143,25 @@
                 return this.$confirm(`确定移除图标？删除后将无法找回`);
             },
             bannerRemove(file, fileList) {
-                this.infoForm.img_url = '';
+                let key = this.infoForm.img_url;
                 let id = this.infoForm.id;
-                this.axios.post('category/deleteBannerImage', {id: id}).then((response) => {
+                this.axios.post('category/deleteBannerImage', {id: id,key:key}).then((response) => {
                     this.$message({
                         type: 'success',
                         message: '删除成功'
                     });
+                    this.infoForm.img_url = '';
                 });
             },
             iconRemove(file, fileList) {
-                this.infoForm.icon_url = '';
+                let key = this.infoForm.icon_url;
                 let id = this.infoForm.id;
-                this.axios.post('category/deleteIconImage', {id: id}).then((response) => {
+                this.axios.post('category/deleteIconImage', {id: id,key:key}).then((response) => {
                     this.$message({
                         type: 'success',
                         message: '删除成功'
                     });
+                    this.infoForm.icon_url = '';
                 });
             },
             goBackPage() {
@@ -185,21 +187,21 @@
                             }
                         })
                     } else {
-                        //return false;
-                        this.axios.post('category/store', this.infoForm).then((response) => {
-                            if (response.data.errno === 0) {
-                                this.$message({
-                                    type: 'success',
-                                    message: '保存成功'
-                                });
-                                this.$router.go(-1)
-                            } else {
-                                this.$message({
-                                    type: 'error',
-                                    message: '保存失败'
-                                })
-                            }
-                        })
+                        return false;
+                        // this.axios.post('category/store', this.infoForm).then((response) => {
+                        //     if (response.data.errno === 0) {
+                        //         this.$message({
+                        //             type: 'success',
+                        //             message: '保存成功'
+                        //         });
+                        //         this.$router.go(-1)
+                        //     } else {
+                        //         this.$message({
+                        //             type: 'error',
+                        //             message: '保存失败'
+                        //         })
+                        //     }
+                        // })
                     }
                 });
             },

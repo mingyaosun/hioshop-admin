@@ -395,7 +395,16 @@
                 })
             },
             goodsGalleryEdit() {
+              if (this.gallery_list.length > 0){
                 this.$router.push({name: 'goodsgalleryedit', query: {id: this.infoForm.id}})
+              }else {
+                this.$message({
+                  type: 'error',
+                  message: '请先添加商品轮播图'
+                })
+                return false;
+              }
+
             },
             specChange(value) {
                 this.specForm.id = value;
@@ -428,7 +437,7 @@
                 this.$refs.upload.submit();
             },
             delePicList() {
-                // 不删除服务器上的图片，上传新的自动替换旧的
+                // 删除服务器上的图片
                 let key = this.infoForm.list_pic_url;
                 let id = this.infoForm.id;
                 this.$confirm('确定删除首图？', '提示', {
@@ -497,7 +506,6 @@
                 });
             },
             galleryPreview(file) {
-                console.log(file);
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
             },
@@ -629,7 +637,6 @@
             },
             handleUploadIndexPicSuccess(res) {
                 let url = this.url;
-                console.log(url + res.key);
                 this.infoForm.index_pic_url = url + res.key;
             },
             handleUploadDetailSuccess(res) {
@@ -649,7 +656,6 @@
                 this.quillUpdateImg = false
             },
             handleUploadGallerySuccess(res) {
-                console.log(res);
                 let url = this.url;
                 if (res.key != '') {
                     let urlData = url + res.key;
@@ -724,7 +730,6 @@
                 let that = this;
                 this.axios.get('goods/getAllSpecification').then((response) => {
                     let resInfo = response.data.data;
-                    console.log(resInfo);
                     that.specOptionsList = resInfo;
                 })
             },
