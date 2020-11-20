@@ -21,7 +21,7 @@ if ($_POST['token']) {
                 || ($_FILES["file"]["type"] == "image/pjpeg")
                 || ($_FILES["file"]["type"] == "image/x-png")
                 || ($_FILES["file"]["type"] == "image/png"))
-            && ($_FILES["file"]["size"] < 204800)   // 小于 200 kb
+            && ($_FILES["file"]["size"] < 20480000)   // 小于 20M
             && in_array($extension, $allowedExts)
         ) {
             if ($_FILES["file"]["error"] > 0) {
