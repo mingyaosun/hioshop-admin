@@ -1,7 +1,7 @@
 <template>
     <div class="left-box">
         <div class="logo">
-            <img src="static/images/loading2.gif"/>
+            <img src="static/images/loading1.gif"/>
         </div>
         <el-menu class="sidebar" :unique-opened="true" :default-active="currentPagePath" @open="handleOpen"
                  :router="true" @close="handleClose">
@@ -155,8 +155,9 @@
     }
 
     .left-box .logo {
+        margin-left:20% ;
         display: flex;
-        justify-content: center;
+        justify-content: left;
         align-items: center;
         height: 120px;
         width: 200px;
