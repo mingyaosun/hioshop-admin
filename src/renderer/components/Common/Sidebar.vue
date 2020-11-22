@@ -155,10 +155,9 @@
     }
 
     .left-box .logo {
-        margin-left:20% ;
         display: flex;
-        justify-content: left;
-        align-items: center;
+        justify-content: center;
+        align-items: flex-end;
         height: 120px;
         width: 200px;
         border-right: solid 1px #e6e6e6;
@@ -166,6 +165,6 @@
     }
 
     .left-box .logo img {
-        height: 60px;
+        height: 90px;
     }
 </style>
