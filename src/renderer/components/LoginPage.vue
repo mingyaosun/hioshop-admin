@@ -108,7 +108,7 @@
 <style>
     .login {
         align-items: center;
-        background: url("/static/images/bg1.jpg");
+        background: url("https://www.sunmingyao.com/static/images/bg1.jpg");
 		/* 以上为登录背景,可以自己更换成自己喜欢的 */
         background-size: 100%;
         background-repeat:no-repeat;
