@@ -2,10 +2,10 @@
     <div class="login">
         <div class="login-box">
             <div class="logo">
-                <img src="static/images/loading2.gif"/>
+                <img src="static/images/loading1.gif"/>
             </div>
             <div class="body">
-                <p class="tips">海风小店</p>
+                <p class="tips">食趣坊</p>
                 <el-form ref="form" :model="form" :rules="rules" label-position="top">
                     <el-form-item label="" prop="username">
                         <el-input v-model="form.username" placeholder="用户名"></el-input>
@@ -108,7 +108,7 @@
 <style>
     .login {
         align-items: center;
-        background: url("http://hiolabs.com/demo/static/images/back1.jpg"); 
+        background: url("https://www.sunmingyao.com/static/images/bg1.jpg");
 		/* 以上为登录背景,可以自己更换成自己喜欢的 */
         background-size: 100%;
         background-repeat:no-repeat;
@@ -122,6 +122,7 @@
     }
 
     .login-box {
+        margin-right: 10%;
         width: 320px;
         background: #fff;
         -webkit-border-radius: 10px;
@@ -140,8 +141,9 @@
     }
 
     .login-box .logo img {
-        width:80px;
-        height: 80px;
+        margin-top: 20px;
+        width: 120px;
+        height: 100px;
     }
 
     .login-box .body {
